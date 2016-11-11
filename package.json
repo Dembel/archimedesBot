@@ -1,11 +1,12 @@
 {
   "name": "archimedes_bot",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Info bot for social networks",
   "main": "app.js",
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
