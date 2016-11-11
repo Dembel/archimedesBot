@@ -1,0 +1,27 @@
+{
+  "name": "archimedes_bot",
+  "version": "0.0.1",
+  "description": "Info bot for social networks",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Dembel/archimedesBot.git"
+  },
+  "keywords": [
+    "social",
+    "networks",
+    "bot",
+    "info"
+  ],
+  "author": "Dmitry Lukashevich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dembel/archimedesBot/issues"
+  },
+  "homepage": "https://github.com/Dembel/archimedesBot#readme"
+}
