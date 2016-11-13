@@ -1,9 +1,11 @@
 {
   "name": "archimedes_bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Info bot for social networks",
   "main": "app.js",
-  "dependencies": {},
+  "dependencies": {
+    "xml2js": "^0.4.17"
+  },
   "devDependencies": {},
   "scripts": {
     "start": "node app.js",
