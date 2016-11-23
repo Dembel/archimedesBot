@@ -19,10 +19,11 @@ const ON_ERROR = "Oh, shoot! I'm tired of that shit"; //TODO: move it to single 
 //********** local helpers **********
 const constructMsg = (phrase, data) => {
   return data.matches.length ?
+    "There are some errors, possible answers are in parens:\n\n" +
     data.matches.reduce((acc, val)  => acc.replace(
       phrase.substr(val.offset, val.length),
       "(" + val.replacements.map(val => val.value).join(", ") + ")"
-    ), phrase) : NO_ERROR_RU; 
+    ), phrase) : NO_ERROR_EN; 
 };
 
 //********** commands **********
@@ -33,7 +34,7 @@ const spellcheck = (cmd, phrase) => {
     method: "POST",
     headers: {
       "X-Mashape-Key": MASHAPE_KEY,
-      "Content-Type": "application/x-www-form-urblencoded",
+      "Content-Type": "application/x-www-form-urlencoded",
       "Accept": "application/json"
     }
   };
