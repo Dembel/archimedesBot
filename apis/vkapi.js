@@ -10,11 +10,28 @@ const querystring = require("querystring");
 
 //********** Helpers **********
 const sendRequest = options => {
+  const req = https.request(options, res => { });
+
+  req.end();
+  req.on("error", error => {
+    throw error;
+  });
+};
+
+const saveCaptcha = (img, sid) => {
+  require("fs").writeFileSync("./captcha_" + sid + ".jpg", img);
+};
+
+const getCaptcha = (options, sid) => {
   const req = https.request(options, res => {
-    var fullRes = "";
+    var img = Buffer.alloc(0);
 
     res.on("data", data => {
-      fullRes += data.toString();
+      img = Buffer.concat([img, data], img.length + data.length);
+    });
+
+    res.on("end", () => {
+      saveCaptcha(img);
     });
   });
 
@@ -72,10 +89,19 @@ const getMessages = callback => {
     });
 
     res.on("end", () => {
-      const msgs = JSON.parse(fullRes).response;
+      const msgs = JSON.parse(fullRes);
 
-      msgs.filter(val => val.body ? val.read_state === 0 : false).
-        forEach(val => callback(val));
+      if (msgs.response) {
+        msgs.response.filter(val => val.body ? val.read_state === 0 : false).
+          forEach(val => callback(val));
+      } else if (msgs.error.error_msg === "Captcha needed") {
+        getCaptcha({
+          hostname: "api.vk.com",
+          path: "/captcha.php?sid=" + msgs.error.captcha_sid
+        }, msgs.error.captcha_sid);
+      } else {
+        throw new Error(msgs.error.error_msg);
+      }
     });
   });
   

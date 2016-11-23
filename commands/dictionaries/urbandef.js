@@ -1,5 +1,6 @@
 /* 
  * Urban Dictionary API
+ * Uses Mashape
  */
 
 "use strict";
@@ -13,13 +14,19 @@ const querystring = require("querystring");
 const NOT_FOUND = "Don't know such thing. Check your damn spelling";
 const ON_ERROR = "Oh, shoot! I'm tired of that shit";
 
-//********** commands **********
-const urbandef = (cmd, word) => {
-  const firstWord = word.split(" ")[0];
+//********** local helpers **********
+const constructMsg = (phrase, data) => {
+  return data.result_type === "no_results" ?
+    NOT_FOUND : "Definition of " + phrase + ":\n\n" +
+    data.list.filter(val => val.definition.length < 600).
+    map(val => "||| " + val.definition).join("\n");  
+};
 
+//********** commands **********
+const urbandef = (cmd, phrase) => {
   const REQ_OPTIONS = {
     hostname: "mashape-community-urban-dictionary.p.mashape.com",
-    path: "/define?" + querystring.stringify({term: word.trim()}),
+    path: "/define?" + querystring.stringify({term: phrase.trim()}),
     headers: {
       "X-Mashape-Key": MASHAPE_KEY,
       "Accept": "application/json"
@@ -34,13 +41,7 @@ const urbandef = (cmd, word) => {
     });
 
     res.on("end", () => {
-      fullRes = JSON.parse(fullRes);
-      const msg = fullRes.result_type === "no_results" ?
-        NOT_FOUND : "Definition of " + word + ":\n\n" +
-        fullRes.list.filter(val => val.definition.length < 600).
-        map(val => "||| " + val.definition).join("\n");
-
-      vkapi.sendMessage(cmd, msg);
+      vkapi.sendMessage(cmd, constructMsg(phrase, JSON.parse(fullRes)));
     });
   });
 
