@@ -13,6 +13,9 @@
  * 
  * -- !urbandef word - gives you a definition of the word 
  * from Urban Dictionary (implemented)
+ * 
+ * -- !spellcheck - spell-checks a word or text using Language Tool.org
+ * (implemented)
  */
 "use strict";
 
