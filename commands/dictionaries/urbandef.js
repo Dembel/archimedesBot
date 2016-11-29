@@ -12,7 +12,7 @@ const querystring = require("querystring");
 
 //********** messages **********
 const NOT_FOUND = "Don't know such thing. Check your damn spelling";
-const ON_ERROR = "Oh, shoot! I'm tired of that shit";
+const ON_ERROR = "Oh, shoot! I'm tired of that shit";//TODO. Make lang file
 
 //********** local helpers **********
 const constructMsg = (phrase, data) => {

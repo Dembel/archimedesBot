@@ -12,9 +12,13 @@ const helpers = require("../../helpers");
 const querystring = require("querystring");
 
 //********** messages **********
+ //TODO. Make lang file for messages
 const NO_ERROR_EN = "Everything seems to be correct";
 const NO_ERROR_RU = "Предлагаемый текст не содержит ошибок";
-const ON_ERROR = "Oh, shoot! I'm tired of that shit"; //TODO: move it to single file
+const SPELL_ERROR_EN = "There are some errors, possible answers are in parens:";
+const SPELL_ERROR_RU = "В тексте имеются ошибки, варианты исправления" +
+  " предоставлены в скобках";
+const ON_ERROR = "Oh, shoot! I'm tired of that shit";
 
 //********** local helpers **********
 const constructMsg = (phrase, data) => {

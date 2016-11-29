@@ -6,43 +6,47 @@
  * -- !google or !g google search query - sends the link to google page 
  * with your search query results. (implemented)
  * 
- * -- !title of !t text - changes the title of a chat (implemented)
+ * -- !title or !t text - changes the title of a chat (implemented)
+ * 
+ * -- !urbandef or !udef word - gives you a definition of the word 
+ * from Urban Dictionary (implemented)
+ * 
+ * -- !def word - gives you a definition of the word from Merriam Webster
+ * 
+ * -- !spellcheck or !scheck- spell-checks a word or text 
+ * using Language Tool.org API (implemented)
+ * 
+ * -- !commands - gives the list of available commands (implemented)
+ * 
+ * -- !calc expression - calculator (not implemented)
  * 
  * -- !weather city - returns the link to rp5 page containing forecast for 
  * your city (not implemented)
  * 
- * -- !urbandef word - gives you a definition of the word 
- * from Urban Dictionary (implemented)
- * 
- * -- !spellcheck - spell-checks a word or text using Language Tool.org
- * (implemented)
  */
 "use strict";
 
-const vkapi = require("./apis/vkapi");
-const urbandef = require("./commands/dictionaries/urbandef");
-const google = require("./commands/google");
-const spellcheck = require("./commands/dictionaries/spellcheck");
+const run = () => {
+  const vkapi = require("./apis/vkapi");
+  const commands = require("./commands/commandList");
 
-const COMMAND_LIST = {
-  "!google": google, "!g": google, "!title": vkapi.title, "!t": vkapi.title,
-  "!urbandef": urbandef, "!spellcheck": spellcheck
+  // command executor
+  const execCmd = msg => {
+    const cmd = msg.body.match(/^!\S+/);
+    const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
+
+    // if command is recognized, execute
+    if (commands[cmd]) {
+      commands[cmd](msg, cmdText);
+    }
+    // mark this message as read so as to not read it twice
+    vkapi.markAsRead(msg.mid);
+  };
+
+  (function mainLoop() {
+    vkapi.getMessages(execCmd);
+    setTimeout(mainLoop, 2000);
+  }());
 };
 
-// command executor
-const execCmd = msg => {
-  const cmd = msg.body.match(/^!\S+/);
-  const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
-
-  // if command is recognized, execute
-  if (COMMAND_LIST[cmd]) {
-    COMMAND_LIST[cmd](msg, cmdText);
-  }
-  // mark this message as read so as to not read it twice
-  vkapi.markAsRead(msg.mid);
-};
-
-(function mainLoop() {
-  vkapi.getMessages(execCmd);
-  setTimeout(mainLoop, 2000);
-}());
+require("./init")(run);
