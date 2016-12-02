@@ -1,14 +1,15 @@
 /*
  * Language Tool API for spell checking
  * Uses Mashape
+ * 
+ * Designed by Dmitry Lukashevich a.k.a. Dembel
  */
 
 "use strict";
 
-const MASHAPE_KEY = require("../../credentials").MASHAPE_KEY;
+const MASHAPE_KEY = require("../credentials").MASHAPE_KEY;
 const https = require("https");
-const vkapi = require("../../apis/vkapi");
-const helpers = require("../../helpers");
+const helpers = require("../helpers");
 const querystring = require("querystring");
 
 //********** messages **********
@@ -31,7 +32,9 @@ const constructMsg = (phrase, data) => {
 };
 
 //********** commands **********
-const spellcheck = (cmd, phrase) => {
+const spellcheck = (data, cb) => {
+  const cmd = data[0];
+  const phrase = data[1];
   const REQ_OPTIONS = {
     hostname: "dnaber-languagetool.p.mashape.com",
     path: "/v2/check",
@@ -55,9 +58,9 @@ const spellcheck = (cmd, phrase) => {
 
     res.on("end", () => {
       if (!fullRes.Error) {
-        vkapi.sendMessage(cmd, constructMsg(phrase, JSON.parse(fullRes)));
+        cb([cmd, constructMsg(phrase, JSON.parse(fullRes))]);
       } else {
-        vkapi.sendMessage(cmd, ON_ERROR);
+        cb([cmd, ON_ERROR]);
       };
     });
   });
@@ -66,7 +69,7 @@ const spellcheck = (cmd, phrase) => {
   req.end();
 
   req.on("error", err => {
-    vkapi.sendMessage(cmd, ON_ERROR);
+    cb([cmd, ON_ERROR]);
   });
 };
 

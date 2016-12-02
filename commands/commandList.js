@@ -1,26 +1,28 @@
 /*
  * List of available commands
+ * Add your custom command here
  */
 
 "use strict";
 
-const vkapi = require("../apis/vkapi");
-const urbandef = require("../commands/dictionaries/urbandef");
+const vkapi = require("../vkapi");
+const urbandef = require("../commands/urbandef");
 const google = require("../commands/google");
-const spellcheck = require("../commands/dictionaries/spellcheck");
+const spellcheck = require("../commands/spellcheck");
 const calc = require("./calc");
 
 const COMMANDS = {
-  "!google": google, "!g": google, "!title": vkapi.title, "!t": vkapi.title,
-  "!urbandef": urbandef, "!udef": urbandef, "!spellcheck": spellcheck,
-  "!scheck": spellcheck, "!calc": calc, "!commands": commands
+  "!commands": commands, "!google": google, "!title": vkapi.title,
+  "!urbandef": urbandef, "!spellcheck": spellcheck, "!calc": calc
 };
 
 // list all available commands
-function commands(cmd) {
-  const msg = Object.keys(COMMANDS).join("  ").replace("  !commands", "");
+function commands(data, cb) {
+  const cmd = data[0];
+  const body = data[1];
+  const msg = "List of commands:\n" + Object.keys(COMMANDS).join(", ");
 
-  vkapi.sendMessage(cmd, msg);
+  cb([cmd, msg]);
 };
 
 module.exports = COMMANDS;

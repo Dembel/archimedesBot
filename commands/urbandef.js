@@ -1,13 +1,14 @@
 /* 
  * Urban Dictionary API
  * Uses Mashape
+ * 
+ * Designed by Dmitry Lukashevich a.k.a. Dembel
  */
 
 "use strict";
 
-const MASHAPE_KEY = require("../../credentials").MASHAPE_KEY;
+const MASHAPE_KEY = require("../credentials").MASHAPE_KEY;
 const https = require("https");
-const vkapi = require("../../apis/vkapi");
 const querystring = require("querystring");
 
 //********** messages **********
@@ -21,9 +22,10 @@ const constructMsg = (phrase, data) => {
     data.list.filter(val => val.definition.length < 600).
     map(val => "||| " + val.definition).join("\n");  
 };
-
 //********** commands **********
-const urbandef = (cmd, phrase) => {
+const urbandef = (data, cb) => {
+  const cmd = data[0];
+  const phrase = data[1];
   const REQ_OPTIONS = {
     hostname: "mashape-community-urban-dictionary.p.mashape.com",
     path: "/define?" + querystring.stringify({term: phrase.trim()}),
@@ -41,13 +43,13 @@ const urbandef = (cmd, phrase) => {
     });
 
     res.on("end", () => {
-      vkapi.sendMessage(cmd, constructMsg(phrase, JSON.parse(fullRes)));
+      cb([cmd, constructMsg(phrase, JSON.parse(fullRes))]);
     });
   });
 
   req.end()
   req.on("error", error => {
-    vkapi.sendMessage(cmd, ON_ERROR);
+    cb([cmd, ON_ERROR]);
   });
 };
 

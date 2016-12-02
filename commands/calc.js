@@ -1,10 +1,11 @@
 /*
  * Calculator
+ * 
+ * Designed by Dmitry Lukashevich a.k.a. Dembel
  */
 
 "use strict";
 
-const vkapi = require("../apis/vkapi");
 //********** local helpers **********
 // operations and related stuff
 const add = (a, b) => b + a;
@@ -104,14 +105,16 @@ const calculate = exp => {
 };
 //********************
 
-const calc = (cmd, exp) => {
+const calc = (data, cb) => {
+  const cmd = data[0];
+  const exp = data[1];
   const expression = parse(exp);
   const result = calculate(expression);
   const msg = isNaN(result) || !checkSyntax(expression) ?
     "Bad expression" :
     "ok\n" + expression.join("") + " = " + result;
 
-  vkapi.sendMessage(cmd, msg);
+  cb([cmd, msg]);
 };
 
 module.exports = calc;

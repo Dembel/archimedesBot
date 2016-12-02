@@ -1,14 +1,14 @@
 /*
- * Info bot for social networks
- * Designed by Dmitry Lukashevich
+ * Info bot for vkontakte
+ * Designed by Dmitry Lukashevich a.k.a. Dembel
  * 
  * Command list:
- * -- !google or !g google search query - sends the link to google page 
+ * -- !google google search query - sends the link to google page 
  * with your search query results. (implemented)
  * 
- * -- !title or !t text - changes the title of a chat (implemented)
+ * -- !title text - changes the title of a chat (implemented)
  * 
- * -- !urbandef or !udef word - gives you a definition of the word 
+ * -- !urbandef word - gives you a definition of the word 
  * from Urban Dictionary (implemented)
  * 
  * -- !def word - gives you a definition of the word from Merriam Webster
@@ -27,25 +27,33 @@
 "use strict";
 
 const run = () => {
-  const vkapi = require("./apis/vkapi");
+  const vkapi = require("./vkapi");
   const commands = require("./commands/commandList");
 
   // command executor
   const execCmd = msg => {
     const cmd = msg.body.match(/^!\S+/);
     const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
+    const data = [msg, cmdText];
 
-    // if command is recognized, execute
-    if (commands[cmd]) {
-      commands[cmd](msg, cmdText);
-    }
     // mark this message as read so as to not read it twice
     vkapi.markAsRead(msg.mid);
+    // if command is recognized, execute
+    if (commands[cmd]) {
+      commands[cmd](data, function (res) {
+        vkapi.sendMessage(res);
+      });
+    }
   };
 
   (function mainLoop() {
+    // randomize delay for response so it's not that obvious we are using bot
+    const max = 3500;
+    const min = 2000;
+    const resDelay = Math.floor(Math.random() * (max - min) + min); 
+
     vkapi.getMessages(execCmd);
-    setTimeout(mainLoop, 2000);
+    setTimeout(mainLoop, resDelay);
   }());
 };
 

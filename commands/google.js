@@ -1,19 +1,23 @@
 /*
- * !G or !Google command module
+ * !Google command module
+ * Performs google search
+ * 
+ * Designed by Dmitry Lukashevich a.k.a Dembel
  */
 
 "use strict"
 
-const vkapi = require("../apis/vkapi");
 const helpers = require("../helpers");
 
 // !google command
-const google = (cmd, msg) => {
+const google = (data, cb) => {
+  const cmd = data[0];
+  const msg = data[1];
   const lang = helpers.detectLanguage(msg) === "ru" ? "lang_ru" : "lang_en";
   const URIString = "www.google.com/search?lr=" + lang +
     "&q=" + msg.split(" ").join("\+");
   
-  vkapi.sendMessage(cmd, URIString);
+  cb([cmd, URIString]);
 };
 
 module.exports = google;

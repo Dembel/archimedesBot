@@ -1,10 +1,12 @@
 /*
  * API for VK
+ * 
+ * Designed by Dmitry Lukashevich a.k.a. Dembel
  */
 
 "use strict"
 
-const ACCESS_TOKEN = require("../credentials").ACCESS_TOKEN;
+const ACCESS_TOKEN = require("./credentials").ACCESS_TOKEN;
 const https = require("https");
 const querystring = require("querystring");
 
@@ -54,7 +56,9 @@ const isTyping = uid => {
 
 //********** Public **********
 // message.send request
-const sendMessage = (cmd, message) => {
+const sendMessage = msg => {
+  const cmd = msg[0];
+  const message = msg[1];
   const id = cmd.chat_id === undefined ?
     "user_id=" + cmd.uid  : "chat_id=" + cmd.chat_id;
 
@@ -111,13 +115,17 @@ const getMessages = callback => {
   });
 };
 // message.editChat request
-const title = (chat, chatTitle) => {
+const title = (data, cb) => {
+  const chat = data[0];
+  const chatTitle = data[1];
+
   sendRequest({
     hostname: "api.vk.com",
     path: "/method/messages.editChat?chat_id=" + chat.chat_id + "&" +
       querystring.stringify({title: chatTitle}) +
       "&access_token=" + ACCESS_TOKEN
   });
+  cb([chat, "As you wish"]);
 };
 
 module.exports = {

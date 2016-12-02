@@ -4,7 +4,7 @@
 
 "use strict";
 
-const MERIAM_KEY = require("../../credentials").MERIAM_KEY;
+const MERIAM_KEY = require("../credentials").MERIAM_KEY;
 const https = require("https");
 const vkapi = require("../../apis/vkapi");
 
@@ -19,7 +19,9 @@ const constructRequest = json => {
          val._.trim() : "").filter(val => val));
 };
 
-const def = (cmd, word) => {
+const def = (data, cb) => {
+  const cmd = data[0];
+  const word = data[1];
   const REQ_OPTIONS = {
     hostname: "dictionaryapi.com",
     path: "/api/v1/references/collegiate/xml/" + word.split(" ")[0] +
