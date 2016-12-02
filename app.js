@@ -18,7 +18,7 @@
  * 
  * -- !commands - gives the list of available commands (implemented)
  * 
- * -- !calc expression - calculator (not implemented)
+ * -- !calc expression - calculator (implemented)
  * 
  * -- !weather city - returns the link to rp5 page containing forecast for 
  * your city (not implemented)

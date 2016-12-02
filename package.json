@@ -1,7 +1,7 @@
 {
   "name": "archimedes_bot",
-  "version": "0.3.0",
-  "description": "Info bot for social networks",
+  "version": "0.4.1",
+  "description": "Info bot for vkontakte",
   "main": "app.js",
   "dependencies": {
     "xml2js": "^0.4.17"
