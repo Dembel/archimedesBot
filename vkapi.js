@@ -57,8 +57,7 @@ const isTyping = uid => {
 //********** Public **********
 // message.send request
 const sendMessage = msg => {
-  const cmd = msg[0];
-  const message = msg[1];
+  const [cmd, message] = msg;
   const id = cmd.chat_id === undefined ?
     "user_id=" + cmd.uid  : "chat_id=" + cmd.chat_id;
 
@@ -116,8 +115,7 @@ const getMessages = callback => {
 };
 // message.editChat request
 const title = (data, cb) => {
-  const chat = data[0];
-  const chatTitle = data[1];
+  const [chat, chatTitle] = data;
 
   sendRequest({
     hostname: "api.vk.com",

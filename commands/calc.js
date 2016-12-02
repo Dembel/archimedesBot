@@ -106,8 +106,7 @@ const calculate = exp => {
 //********************
 
 const calc = (data, cb) => {
-  const cmd = data[0];
-  const exp = data[1];
+  const [cmd, exp] = data;
   const expression = parse(exp);
   const result = calculate(expression);
   const msg = isNaN(result) || !checkSyntax(expression) ?

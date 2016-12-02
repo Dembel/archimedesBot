@@ -24,8 +24,7 @@ const constructMsg = (phrase, data) => {
 };
 //********** commands **********
 const urbandef = (data, cb) => {
-  const cmd = data[0];
-  const phrase = data[1];
+  const [cmd, phrase] = data;
   const REQ_OPTIONS = {
     hostname: "mashape-community-urban-dictionary.p.mashape.com",
     path: "/define?" + querystring.stringify({term: phrase.trim()}),

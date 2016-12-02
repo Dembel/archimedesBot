@@ -11,8 +11,7 @@ const helpers = require("../helpers");
 
 // !google command
 const google = (data, cb) => {
-  const cmd = data[0];
-  const msg = data[1];
+  const [cmd, msg] = data;
   const lang = helpers.detectLanguage(msg) === "ru" ? "lang_ru" : "lang_en";
   const URIString = "www.google.com/search?lr=" + lang +
     "&q=" + msg.split(" ").join("\+");

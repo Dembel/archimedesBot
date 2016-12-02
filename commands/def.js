@@ -20,8 +20,7 @@ const constructRequest = json => {
 };
 
 const def = (data, cb) => {
-  const cmd = data[0];
-  const word = data[1];
+  const [cmd, word] = data;
   const REQ_OPTIONS = {
     hostname: "dictionaryapi.com",
     path: "/api/v1/references/collegiate/xml/" + word.split(" ")[0] +

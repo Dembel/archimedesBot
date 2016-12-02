@@ -33,8 +33,7 @@ const constructMsg = (phrase, data) => {
 
 //********** commands **********
 const spellcheck = (data, cb) => {
-  const cmd = data[0];
-  const phrase = data[1];
+  const [cmd, phrase] = data;
   const REQ_OPTIONS = {
     hostname: "dnaber-languagetool.p.mashape.com",
     path: "/v2/check",

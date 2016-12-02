@@ -18,8 +18,7 @@ const COMMANDS = {
 
 // list all available commands
 function commands(data, cb) {
-  const cmd = data[0];
-  const body = data[1];
+  const [cmd, body] = data;
   const msg = "List of commands:\n" + Object.keys(COMMANDS).join(", ");
 
   cb([cmd, msg]);
