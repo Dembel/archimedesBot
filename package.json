@@ -1,23 +1,24 @@
 {
   "name": "archimedes_bot",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Info bot for vkontakte",
   "main": "app.js",
-  "dependencies": {
-    "xml2js": "^0.4.17"
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Dembel/archimedesBot.git"
   },
   "keywords": [
-    "social",
-    "networks",
+    "vkontakte",
+    "vk",
     "bot",
     "info"
   ],

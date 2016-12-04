@@ -35,7 +35,7 @@ const run = () => {
     const cmd = msg.body.match(/^!\S+/);
     const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
     const data = [msg, cmdText];
-
+ 
     // mark this message as read so as to not read it twice
     vkapi.markAsRead(msg.mid);
     // if command is recognized, execute

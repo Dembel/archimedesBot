@@ -12,11 +12,15 @@ const helpers = require("../helpers");
 // !google command
 const google = (data, cb) => {
   const [cmd, msg] = data;
-  const lang = helpers.detectLanguage(msg) === "ru" ? "lang_ru" : "lang_en";
-  const URIString = "www.google.com/search?lr=" + lang +
+  if (msg) {
+    const lang = helpers.detectLanguage(msg) === "ru" ? "lang_ru" : "lang_en";
+    const result = "www.google.com/search?lr=" + lang +
     "&q=" + msg.split(" ").join("\+");
-  
-  cb([cmd, URIString]);
+
+    cb([cmd, result]);
+  } else {
+    cb([cmd, "Empty search query. Try !help google"]);
+  }
 };
 
 module.exports = google;
