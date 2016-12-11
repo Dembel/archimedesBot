@@ -25,6 +25,10 @@ const constructMsg = (phrase, data) => {
 //********** commands **********
 const urbandef = (data, cb) => {
   const [cmd, phrase] = data;
+  if (!phrase) {
+    cb([cmd, "Empty query. Try !help urbandef"]);
+    return;
+  }
   const REQ_OPTIONS = {
     hostname: "mashape-community-urban-dictionary.p.mashape.com",
     path: "/define?" + querystring.stringify({term: phrase}),
@@ -33,11 +37,6 @@ const urbandef = (data, cb) => {
       "Accept": "application/json"
     }
   };
-
-  if (!phrase) {
-    cb([cmd, "Empty query. Try !help urbandef"]);
-    return;
-  }
   const req = https.request(REQ_OPTIONS, res => {
     var fullRes = "";
 

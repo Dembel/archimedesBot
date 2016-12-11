@@ -34,6 +34,10 @@ const constructMsg = (phrase, data) => {
 //********** commands **********
 const spellcheck = (data, cb) => {
   const [cmd, phrase] = data;
+  if (!phrase) {
+    cb([cmd,"Empty query. Try !help spellcheck"]);
+    return;
+  }
   const REQ_OPTIONS = {
     hostname: "dnaber-languagetool.p.mashape.com",
     path: "/v2/check",
