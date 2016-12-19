@@ -1,12 +1,28 @@
 const chai = require("chai");
 const expect = chai.expect;
 const google = require("../commands/google");
+const config = require("../config.json");
+const initialLang = config.lang;
+const fs = require("fs");
 
 describe("Google module tests", () => {
   const lang_ru = "lang_ru";
   const lang_en = "lang_en";
   const uri = "www.google.com/search?lr=";
   const should = "should return ";
+  let newConf = config;
+
+  before(() => {
+    newConf.lang = "en";
+    fs.writeFileSync("./config.json",
+                     JSON.stringify(newConf, false, 2));
+
+  });
+  after(() => {
+    newConf.lang = initialLang;
+    fs.writeFileSync("./config.json",
+                     JSON.stringify(newConf, false, 2));
+  });
 
   it(should.concat(uri, lang_ru, "&q=", "Кролик+Роджер"), done => {
     google([null, "Кролик Роджер"], data => {

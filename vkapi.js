@@ -9,14 +9,19 @@
 const ACCESS_TOKEN = require("./credentials").ACCESS_TOKEN;
 const https = require("https");
 const querystring = require("querystring");
+const logger = require("./logger");
 
 //********** Helpers **********
 const sendRequest = options => {
-  const req = https.request(options, res => { });
+  const req = https.request(options, res => {
+    res.on("error", err => {
+      logger.log("error", err);
+    });
+  });
 
   req.end();
-  req.on("error", error => {
-    throw error;
+  req.on("error", err => {
+    logger.log("error", err);
   });
 };
 
@@ -31,15 +36,17 @@ const getCaptcha = (options, sid) => {
     res.on("data", data => {
       img = Buffer.concat([img, data], img.length + data.length);
     });
-
     res.on("end", () => {
       saveCaptcha(img);
+    });
+    res.on("error", err => {
+      logger.log("error", err);      
     });
   });
 
   req.end();
-  req.on("error", error => {
-    throw error;
+  req.on("error", err => {
+      logger.log("error", err);
   });
 };
 
@@ -90,27 +97,34 @@ const getMessages = callback => {
     res.on("data", data => {
       fullRes += data.toString();
     });
-
     res.on("end", () => {
       const msgs = JSON.parse(fullRes);
 
       if (msgs.response) {
-        msgs.response.filter(val => val.body ? val.read_state === 0 : false).
-          forEach(val => callback(val));
+        msgs.response.filter(val => {
+          if (val.body) {
+            return val.read_state === 0;
+          } else {
+            return false;
+          }
+        }).forEach(val => callback(val));
       } else if (msgs.error.error_msg === "Captcha needed") {
         getCaptcha({
           hostname: "api.vk.com",
           path: "/captcha.php?sid=" + msgs.error.captcha_sid
         }, msgs.error.captcha_sid);
       } else {
-        throw new Error(msgs.error.error_msg);
+        logger.log("error", msgs.error.error_msg);
       }
+    });
+    res.on("error", err => {
+      logger.log("error", err);      
     });
   });
   
   req.end();
-  req.on("error", error => {
-    throw error;
+  req.on("error", err => {
+    logger.log("error", err);
   });
 };
 // message.editChat request
@@ -123,12 +137,28 @@ const title = (data, cb) => {
       querystring.stringify({title: chatTitle}) +
       "&access_token=" + ACCESS_TOKEN
   });
-  cb([chat, "As you wish"]);
+  cb([chat, null]);
+};
+// account.setOnline request
+const setOnline = () => {
+  sendRequest({
+    hostname: "api.vk.com",
+    path: "/method/account.setOnline?access_token=" + ACCESS_TOKEN
+  });
+};
+// account.setOffline request
+const setOffline = () => {
+  sendRequest({
+    hostname: "api.vk.com",
+    path: "/method/account.setOffline?access_token=" + ACCESS_TOKEN
+  });
 };
 
 module.exports = {
   title: title,
   getMessages: getMessages,
   markAsRead: markAsRead,
-  sendMessage: sendMessage
-}
+  sendMessage: sendMessage,
+  setOnline: setOnline,
+  setOffline: setOffline
+};

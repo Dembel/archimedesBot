@@ -1,3 +1,4 @@
+/*global  */
 /*
  * Info bot for vkontakte
  * Designed by Dmitry Lukashevich a.k.a. Dembel
@@ -12,6 +13,7 @@
  * from Urban Dictionary (implemented)
  * 
  * -- !def word - gives you a definition of the word from Merriam Webster
+ * (not implemented)
  * 
  * -- !spellcheck or !scheck- spell-checks a word or text 
  * using Language Tool.org API (implemented)
@@ -25,36 +27,52 @@
  * 
  */
 "use strict";
+const vkapi = require("./vkapi");
+const logger = require("./logger");
+
+// command executor
+const execCmd = msg => {
+  const commands = require("./commands/commandList");
+  const cmd = msg.body.match(/^!\S+/);
+  const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
+  const data = [msg, cmdText];
+
+  // if command is recognized, execute
+  if (commands[cmd] && cmdText != null) {
+    commands[cmd](data, res => {
+      vkapi.sendMessage(res);
+    });
+  }
+  // mark this message as read so as to not read it twice
+  vkapi.markAsRead(msg.mid);
+};
+
+// set bot online
+const onlineStatusLoop = () => {
+  vkapi.setOnline();
+  setTimeout(onlineStatusLoop, 60000);
+};
+
+const mainLoop = () => {
+  vkapi.getMessages(execCmd);
+  setTimeout(mainLoop, 2000);
+};
 
 const run = () => {
-  const vkapi = require("./vkapi");
-  const commands = require("./commands/commandList");
-
-  // command executor
-  const execCmd = msg => {
-    const cmd = msg.body.match(/^!\S+/);
-    const cmdText = cmd ? msg.body.slice(cmd[0].length + 1).trim() : null;
-    const data = [msg, cmdText];
- 
-    // mark this message as read so as to not read it twice
-    vkapi.markAsRead(msg.mid);
-    // if command is recognized, execute
-    if (commands[cmd]) {
-      commands[cmd](data, function (res) {
-        vkapi.sendMessage(res);
-      });
-    }
-  };
-
-  (function mainLoop() {
-    // randomize delay for response so it's not that obvious we are using bot
-    const max = 3500;
-    const min = 2000;
-    const resDelay = Math.floor(Math.random() * (max - min) + min); 
-
-    vkapi.getMessages(execCmd);
-    setTimeout(mainLoop, resDelay);
-  }());
+  mainLoop();
+  onlineStatusLoop();
 };
+
+// set bot offline on error or exit and log an error if there's one
+const finish = err => {
+  vkapi.setOffline();
+  if (err) {
+    logger.log("error", err);
+    console.log(err);
+  }
+  process.exit();
+};
+process.on("uncaughtException", finish);
+process.on("SIGINT", finish);
 
 require("./init")(run);

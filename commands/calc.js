@@ -5,7 +5,6 @@
  */
 
 "use strict";
-
 //********** local helpers **********
 // operations and related stuff
 const add = (a, b) => b + a;
@@ -17,6 +16,7 @@ const exp = (a, b) => Math.pow(b, a);
 const opsEval = {"+": add, "-": subtract, "*": multiply, "/": divide, "^": exp};
 const precedence = {"^": 3, "*": 2, "/": 2, "+": 1, "-": 1};
 const ops = "^*/+-";
+const appropriateSymbs = ops.concat("(),.", "1234567890", " ");
 
 // check whether opening parens number is equal to closing one
 const checkParens = exp =>
@@ -26,41 +26,12 @@ const checkParens = exp =>
 const checkOps = exp =>
   exp.filter(val => !isNaN(val)).length -
   exp.filter(val => ops.includes(val)).length === 1;
-// check syntax wrapper
+// check for appropriate symbols
+const checkSymb = exp =>
+  exp.every(val => appropriateSymbs.includes(val));
+// check syntax
 const checkSyntax = exp => checkParens(exp) && checkOps(exp);
 
-// parse an expression
-const parse = exp => {
-  let splited = [];
-  let buffer = "";
-
-  Array.from(exp).filter(val => val !== " ").forEach(val => {
-    switch (isNaN(val)) {
-      case true:
-      if ((val === "-" && !buffer) || (".,".includes(val) && buffer)) {
-        if (splited[splited.length - 1] === ")") {
-          if (buffer) splited.push(buffer);
-          splited.push(val);
-          buffer = ""; 
-        } else {
-          buffer += val.replace(/,/g, ".");
-        }
-      } else if (",.".includes(buffer[buffer.length - 1])) {
-        buffer = "bad";
-      } else {
-        if (buffer) splited.push(buffer);
-        splited.push(val);
-        buffer = ""; 
-      }
-      break;
-      case false:
-      buffer += val;
-      break;
-    }
-  });
-  if (buffer) splited.push(buffer);
-  return splited;
-};
 // convert to postfix
 const infixToPostfix = exp => {
   let opStack = [];
@@ -106,6 +77,7 @@ const calculate = exp => {
       stack.push(val);
     }
   });
+
   if (stack[0].toString().split(".")[0].length > 12) {
     return stack.pop().toExponential(9).
       replace(/0+$/, "").replace(/\.$/, "");
@@ -113,16 +85,61 @@ const calculate = exp => {
     return stack.pop().toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
   }
 };
+// parse an expression
+const parse = exp => {
+  let splited = [];
+  let buffer = "";
+
+  Array.from(exp).filter(val => val !== " ").forEach(val => {
+    switch (isNaN(val)) {
+      case true:
+      if ((val === "-" && !buffer) || (".,".includes(val) && buffer)) {
+        if (splited[splited.length - 1] === ")") {
+          if (buffer) splited.push(buffer);
+          splited.push(val);
+          buffer = ""; 
+        } else {
+          buffer += val.replace(/,/g, ".");
+        }
+      } else if (",.".includes(buffer[buffer.length - 1])) {
+        buffer = "bad";
+      } else {
+        if (buffer) splited.push(buffer);
+        splited.push(val);
+        buffer = ""; 
+      }
+      break;
+      case false:
+      buffer += val;
+      break;
+    }
+  });
+  if (buffer) splited.push(buffer);
+  return splited;
+};
+
+const getResult = exp => {
+  const expression = parse(exp);
+  const config = require("../config.json");
+  const badExpression = config.lang === "en" ?
+    require("../vocabulary/calcVocab.json").en.badExpression:
+    require("../vocabulary/calcVocab.json").ru.badExpression;
+
+  if (checkSyntax(expression) && checkSymb(exp.split(""))) {
+    const result = calculate(expression);
+
+    return isNaN(result) ? badExpression:
+      "ok\n".concat(expression.join(""), " = ", result);
+  } else {
+    return badExpression;
+  }
+};
 //********************
 
 const calc = (data, cb) => {
   const [cmd, exp] = data;
-  const expression = parse(exp);
-  const result = calculate(expression);
-  const msg = isNaN(result) || !checkSyntax(expression) ?
-    "Bad expression" : "ok\n".concat(expression.join(""), " = ", result);
 
-  cb([cmd, msg]);
+  cb([cmd, getResult(exp)]);
 };
 
 module.exports = calc;

@@ -1,9 +1,11 @@
 {
   "name": "archimedes_bot",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Info bot for vkontakte",
   "main": "app.js",
-  "dependencies": {},
+  "dependencies": {
+    "winston": "^2.3.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.2.0"

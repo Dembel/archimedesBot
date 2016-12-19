@@ -1,0 +1,12 @@
+{
+  "en": {
+    "NO_ERROR": "Everything seems to be correct",
+    "SPELL_ERROR": "There are some errors, possible answers are in parens:\n\n",
+    "EMPTY_QUERY": "Empty query. Try !help spellcheck"
+  },
+  "ru": {
+    "NO_ERROR": "Предлагаемый текст не содержит ошибок",
+    "SPELL_ERROR": "В тексте имеются ошибки, варианты исправления предоставлены в скобках:\n\n",
+    "EMPTY_QUERY": "Пустой запрос. Воспользуйтесь справкой !help spellcheck"
+  }
+}

@@ -6,20 +6,27 @@
 "use strict";
 
 const vkapi = require("../vkapi");
-const urbandef = require("../commands/urbandef");
-const google = require("../commands/google");
-const spellcheck = require("../commands/spellcheck");
+const urbandef = require("./urbandef");
+const google = require("./google");
+const spellcheck = require(".//spellcheck");
+const help = require("./help");
 const calc = require("./calc");
+
 
 const COMMANDS = {
   "!commands": commands, "!google": google, "!title": vkapi.title,
-  "!urbandef": urbandef, "!spellcheck": spellcheck, "!calc": calc
+  "!urbandef": urbandef, "!spellcheck": spellcheck, "!calc": calc,
+  "!help": help
 };
 
 // list all available commands
 function commands(data, cb) {
+  const config = require("../config.json");
+  const cmdListVocab = config.lang === "en" ?
+    require("../vocabulary/cmdListVocab.json").en :
+    require("../vocabulary/cmdListVocab.json").ru;
   const [cmd, body] = data;
-  const msg = "List of commands:\n" + Object.keys(COMMANDS).join(", ");
+  const msg = cmdListVocab + Object.keys(COMMANDS).join(", ");
 
   cb([cmd, msg]);
 };

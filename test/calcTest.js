@@ -1,8 +1,25 @@
 const chai = require("chai");
 const expect = chai.expect;
 const calc = require("../commands/calc");
+const config = require("../config.json");
+const initialLang = config.lang;
+const fs = require("fs");
 
 describe("Calc module tests", () => {
+  let newConf = config;
+
+  before(() => {
+    newConf.lang = "en";
+    fs.writeFileSync("./config.json",
+                     JSON.stringify(newConf, false, 2));
+
+  });
+  after(() => {
+    newConf.lang = initialLang;
+    fs.writeFileSync("./config.json",
+                     JSON.stringify(newConf, false, 2));
+  });
+
   it("should return ok\\n12+6 = 18", (done) => {    
     calc([null, "12 + 6"], (data) => {
       expect(data[1]).to.equal("ok\n12+6 = 18");
@@ -268,6 +285,36 @@ describe("Calc module tests", () => {
   });
   it("should return Bad expression", (done) => {    
     calc([null, "12 + 6 + 124 + (178 + 7) / 0"], (data) => {
+      expect(data[1]).to.equal("Bad expression");
+      done();
+    });
+  });
+  it("should return Bad expression", (done) => {    
+    calc([null, "12g6"], (data) => {
+      expect(data[1]).to.equal("Bad expression");
+      done();
+    });
+  });
+  it("should return Bad expression", (done) => {    
+    calc([null, "12 g6"], (data) => {
+      expect(data[1]).to.equal("Bad expression");
+      done();
+    });
+  });
+  it("should return Bad expression", (done) => {    
+    calc([null, "12 g 6"], (data) => {
+      expect(data[1]).to.equal("Bad expression");
+      done();
+    });
+  });
+  it("should return Bad expression", (done) => {    
+    calc([null, "12 '6"], (data) => {
+      expect(data[1]).to.equal("Bad expression");
+      done();
+    });
+  });
+  it("should return Bad expression", (done) => {    
+    calc([null, "a1g6"], (data) => {
       expect(data[1]).to.equal("Bad expression");
       done();
     });

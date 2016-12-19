@@ -11,7 +11,12 @@ const helpers = require("../helpers");
 
 // !google command
 const google = (data, cb) => {
+  const config = require("../config.json");
+  const vocab = config.lang === "en" ?
+    require("../vocabulary/googleVocab.json").en:
+    require("../vocabulary/googleVocab.json").ru;
   const [cmd, msg] = data;
+
   if (msg) {
     const lang = helpers.detectLanguage(msg) === "ru" ? "lang_ru" : "lang_en";
     const result = "www.google.com/search?lr=" + lang +
@@ -19,7 +24,7 @@ const google = (data, cb) => {
 
     cb([cmd, result]);
   } else {
-    cb([cmd, "Empty search query. Try !help google"]);
+    cb([cmd, vocab]);
   }
 };
 

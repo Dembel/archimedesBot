@@ -1,0 +1,12 @@
+{ 
+  "en": {
+    "NOT_FOUND": "Don't know such thing. Check your damn spelling",
+    "DEFINITION_OF": "Definition of ",
+    "EMPTY_QUERY": "Empty query. Try !help urbandef"
+  },
+  "ru": {
+    "NOT_FOUND": "Не понимаю о чём ты. Проверь правописание",
+    "DEFINITION_OF": "Значение выражения ",
+    "EMPTY_QUERY": "Пустой запрос. Воспользуйтесь справкой !help urbandef"
+  }
+}

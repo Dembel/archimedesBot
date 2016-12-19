@@ -10,15 +10,20 @@
 const MASHAPE_KEY = require("../credentials").MASHAPE_KEY;
 const https = require("https");
 const querystring = require("querystring");
-
-//********** messages **********
-const NOT_FOUND = "Don't know such thing. Check your damn spelling";
-const ON_ERROR = "Oh, shoot! I'm tired of that shit";//TODO. Make lang file
+const logger = require("../logger");
 
 //********** local helpers **********
+const getVocab = () => {
+  const config = require("../config.json");
+
+  return config.lang === "en" ?
+    require("../vocabulary/urbandefVocab.json").en:
+    require("../vocabulary/urbandefVocab.json").ru;
+};
+
 const constructMsg = (phrase, data) => {
   return data.result_type === "no_results" ?
-    NOT_FOUND : "Definition of " + phrase + ":\n\n" +
+    getVocab().NOT_FOUND : getVocab().DEFINITION_OF + phrase + ":\n\n" +
     data.list.filter(val => val.definition.length < 600).
     map(val => "||| " + val.definition).join("\n");
 };
@@ -26,7 +31,7 @@ const constructMsg = (phrase, data) => {
 const urbandef = (data, cb) => {
   const [cmd, phrase] = data;
   if (!phrase) {
-    cb([cmd, "Empty query. Try !help urbandef"]);
+    cb([cmd, getVocab().EMPTY_QUERY]);
     return;
   }
   const REQ_OPTIONS = {
@@ -47,11 +52,15 @@ const urbandef = (data, cb) => {
     res.on("end", () => {
       cb([cmd, constructMsg(phrase, JSON.parse(fullRes))]);
     });
+
+    res.on("error", err => {
+      logger.log("error", err);
+    });
   });
 
   req.end()
   req.on("error", error => {
-    cb([cmd, ON_ERROR]);
+    logger.log("error", err);
   });
 };
 

@@ -1,0 +1,22 @@
+{
+  "en": {
+    "": "!help usage:\n type !help and command name w/o exclamation mark.\n Example: !help urbandef",
+    "commands": "!commands: returns the list of available commands",
+    "google": "!google: returns the link to google search results page.\n Usage: !google <your search query>.\n Example: !google foo bar",
+    "title": "!title: changes the title of conversation\n Usage: !title <new title>\n Example: !title foobar",
+    "urbandef": "!urbandef: sends request of your word or phrase to urban dictionary and returns its definition (English only).\n Usage: !urbandef <your word|phrase>\n Examples: !urbandef pine | !urbandef pull one's leg",
+    "spellcheck": "!spellcheck: spellchecks your word|phrase and returns same word|phrase with possible corrections in parens.\n Usage: !spellcheck <your word|phrase>.\n Examples: !spellcheck foobar | !spellcheck foo bar foobar",
+    "calc": "!calc: calculator - calculates your expression. You can use * / + - ^, parens, and negative numbers in your expression.\n Usage: !calc <your expression>.\n Example: !calc (-12 + 7) * 24 / (16 - 8)",
+    "noCommand": "There's no such command. Try !commands to see the list of available commands"
+  },
+  "ru": {
+    "": "Использование команды !help:\n наберите !help и желаемую команду без восклицательного знака\n Например: !help urbandef",
+    "commands": "!commands: показывает список доступных команд",
+    "google": "!google: возвращает ссылку на страничку гугла с результатами поиска.\n Применение: !google <поисковый запрос>.\n Например: !google foo bar",
+    "title": "!title: меняет заголовок чата\n Применение: !title <новый заголовок>\n Пример: !title foobar",
+    "urbandef": "!urbandef: делает запрос слова или фразы из словаря Urban dictionary и возврашает определение этого слова или фразы (Только английский язык).\n Применение: !urbandef <слово|фраза>\n Примеры: !urbandef pine | !urbandef pull one's leg",
+    "spellcheck": "!spellcheck: проверяет правильность написания слова|фразы, возвращает тот же текст но с возможными вариантами исправления в скобках.\n Применение: !spellcheck <слово|фраза>.\n Примеры: !spellcheck foobar | !spellcheck foo bar foobar",
+    "calc": "!calc: калькулятор - вычисляет значение математического выражения. Можно использовать * / + - ^, скобки, и отрицательные числа.\n Применение: !calc <математическое выражение>.\n Пример: !calc (-12 + 7) * 24 / (16 - 8)",
+    "noCommand": "Не знаю такой команды. Наберите !commands чтобы посмотреть список доступных команд"
+  }
+}
